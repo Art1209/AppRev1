@@ -1,5 +1,6 @@
 package AppRev1.highLevelApp.config;
 
+import org.hibernate.HibernateException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -25,13 +26,13 @@ public class JpaConfig {
     LocalContainerEntityManagerFactoryBean getEmf(){
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("rs5");
+        em.setPackagesToScan("AppRev1.highLevelApp.persistence.entity");
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(additionalProperties());
-
         return em;
     }
+
     @Bean
     public Properties additionalProperties() {
         Properties props = new Properties();
@@ -49,7 +50,7 @@ public class JpaConfig {
 //        dataSource.setUsername( "admin" );
 //        dataSource.setPassword( "4251" );
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/testdb");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/testdb?useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
         dataSource.setUsername("user");
         dataSource.setPassword("4251");
         return dataSource;

@@ -14,7 +14,7 @@ public class Initializer implements WebApplicationInitializer {
 
     public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-        ctx.register(Config.class, JpaConfig.class);
+        ctx.register(Config.class, JpaConfig.class, SecurityConfig.class);
         servletContext.addListener(new ContextLoaderListener(ctx));
 
         ctx.setServletContext(servletContext);

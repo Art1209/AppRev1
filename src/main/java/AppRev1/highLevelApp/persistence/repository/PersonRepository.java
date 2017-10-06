@@ -1,16 +1,18 @@
 package AppRev1.highLevelApp.persistence.repository;
 
 import AppRev1.highLevelApp.persistence.entity.Person;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-/**
- * Created by aalbutov on 04.10.2017.
- */
+import java.util.List;
+
+
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Long> {
     @Query("select b from Person b where b.login = :login")
-    Person findByLogin(@Param("login") String login);
+    //value="SELECT a FROM persons WHERE a.login = ?1 LIMIT 1", nativeQuery = true
+    List<Person> findByLogin(@Param("login") String login, Pageable pageable);
 }
