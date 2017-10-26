@@ -1,7 +1,9 @@
-package AppRev1.highLevelApp.persistence.service;
+package AppRev1.highLevelApp.config.Security;
 
 import AppRev1.highLevelApp.persistence.entity.Person;
 import AppRev1.highLevelApp.persistence.entity.Role;
+import AppRev1.highLevelApp.persistence.service.PersonService;
+import AppRev1.highLevelApp.persistence.service.RoleService;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Person person = ps.getPerson(username);
+        if (person==null)throw new UsernameNotFoundException("from userDetailsService");
         List<GrantedAuthority> auths = new ArrayList<>();
         for (Role role : person.getRolesList()){
             auths.add(new SimpleGrantedAuthority(role.getRole()));
@@ -34,8 +37,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         log.info(person.getLogin()+" "+
                 person.getPassword()+" "+
                 person.getRolesList());
-        UserDetails userDetails = new User(person.getLogin(),
-                person.getPassword(),auths);
+        UserDetails userDetails = new CustomPrincipal(person.getLogin(),
+                person.getPassword(),auths, ps.getTokens(person.getId()));
 
         return userDetails;
     }

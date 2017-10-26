@@ -1,7 +1,9 @@
 package AppRev1.highLevelApp.persistence.service;
 
 import AppRev1.highLevelApp.persistence.entity.Person;
+import AppRev1.highLevelApp.persistence.entity.Token;
 import AppRev1.highLevelApp.persistence.repository.PersonRepository;
+import AppRev1.highLevelApp.persistence.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +18,8 @@ public class PersonService {
 
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    TokenRepository tokenRepository;
 
     @Transactional
     public Person getPerson(Long id){
@@ -32,6 +36,11 @@ public class PersonService {
     @Transactional
     public List<Person> getAll(){
         return personRepository.findAll();
+    }
+
+    @Transactional
+    public List<Token> getTokens(Long id){
+        return tokenRepository.findByPersonId(id);
     }
 
     @Transactional

@@ -1,6 +1,9 @@
 package AppRev1.highLevelApp.persistence.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -39,6 +42,13 @@ public class Person implements Serializable {
         this.login = login;
         this.password = password;
     }
+
+    @JsonIgnore
+    @OneToMany(targetEntity = Token.class,
+            cascade = CascadeType.MERGE, mappedBy="personId")
+    @Getter
+    @Setter
+    private List<Token> tokenList;
 
     public Person() {
     }

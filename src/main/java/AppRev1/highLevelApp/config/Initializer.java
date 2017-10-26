@@ -1,5 +1,6 @@
 package AppRev1.highLevelApp.config;
 
+import AppRev1.highLevelApp.config.Security.SecurityConfig;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;

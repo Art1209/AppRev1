@@ -1,6 +1,7 @@
 package AppRev1.highLevelApp.persistence.repository;
 
 import AppRev1.highLevelApp.persistence.entity.Person;
+import AppRev1.highLevelApp.persistence.entity.Token;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
