@@ -39,11 +39,6 @@ public class PersonService {
     }
 
     @Transactional
-    public List<Token> getTokens(Long id){
-        return tokenRepository.findByPersonId(id);
-    }
-
-    @Transactional
     public void addPerson(Person person){
         personRepository.saveAndFlush(person);
     }

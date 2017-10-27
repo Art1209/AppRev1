@@ -1,4 +1,4 @@
-package AppRev1.highLevelApp.config.Security;
+package AppRev1.highLevelApp.config.secutity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;

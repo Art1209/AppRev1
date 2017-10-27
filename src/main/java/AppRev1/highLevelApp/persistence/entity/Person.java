@@ -36,19 +36,32 @@ public class Person implements Serializable {
             name="PERSON_ROLE",
             joinColumns=@JoinColumn(name="PERSON_ID", referencedColumnName="personId"),
             inverseJoinColumns=@JoinColumn(name="ROLE_ID", referencedColumnName="roleId"))
-    private List<Role> rolesList=new ArrayList<>();
+    private List<Role> rolesList;
 
     public Person(String login, String password) {
         this.login = login;
         this.password = password;
     }
 
+    @Getter
+    @Setter
+    @JsonIgnore
+    @OneToOne(mappedBy = "person", cascade = CascadeType.MERGE)
+    private MOperator mOperator;
+
+    @Getter
+    @Setter
     @JsonIgnore
     @OneToMany(targetEntity = Token.class,
             cascade = CascadeType.MERGE, mappedBy="personId")
+    private List<Token> tokenList;
+
     @Getter
     @Setter
-    private List<Token> tokenList;
+    @JsonIgnore
+    @OneToMany(targetEntity = Admission.class,
+            cascade = CascadeType.MERGE, mappedBy="person")
+    private List<Admission> admissions;
 
     public Person() {
     }

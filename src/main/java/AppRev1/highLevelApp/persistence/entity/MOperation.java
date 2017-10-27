@@ -1,10 +1,14 @@
 package AppRev1.highLevelApp.persistence.entity;
 
 import AppRev1.highLevelApp.persistence.entity.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.File;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  Опция
@@ -24,6 +28,20 @@ public class MOperation implements Serializable{
 
     @Column(name = "link")
     private String resourceLink;
+
+    @Getter
+    @Setter
+    @JsonIgnore
+    @OneToMany(targetEntity = Admission.class,
+            cascade = CascadeType.MERGE, mappedBy="mOperation")
+    private List<Admission> admissions;
+
+    @Getter
+    @Setter
+    @JsonIgnore
+    @ManyToMany(targetEntity = MOperator.class,
+            cascade = CascadeType.MERGE, mappedBy="operationsList")
+    private List<MOperator> operators;
 
     public void setOperationId(Long operationId) {
         this.operationId = operationId;

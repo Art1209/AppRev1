@@ -14,20 +14,20 @@ public class Admission implements Serializable{
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id", length = 6, nullable = false)
+    @Column(name = "admissionId", length = 6, nullable = false)
     private Long admissionId;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="OPERATOR_ID")
-    private MOperator MOperator;
+    private MOperator mOperator;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name="PERSON_ID")
     private Person person;
 
-    @OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "OPERATION_ID")
-    private MOperation MOperation;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name="OPERATION_ID")
+    private MOperation mOperation;
 
     @Column(name = "datetime")
     private Timestamp date;
@@ -35,10 +35,10 @@ public class Admission implements Serializable{
     public Admission() {
     }
 
-    public Admission(MOperation MOperation, MOperator MOperator, Person person, Timestamp date) {
+    public Admission(MOperation MOperation, MOperator mOperator, Person person, Timestamp date) {
         this.person = person;
-        this.MOperation = MOperation;
-        this.MOperator = MOperator;
+        this.mOperation = MOperation;
+        this.mOperator = mOperator;
         this.date = date;
     }
 
@@ -46,8 +46,8 @@ public class Admission implements Serializable{
         return admissionId;
     }
 
-    public MOperator getMOperator() {
-        return MOperator;
+    public MOperator getmOperator() {
+        return mOperator;
     }
 
     public Person getPerson() {
@@ -55,7 +55,7 @@ public class Admission implements Serializable{
     }
 
     public MOperation getMOperation() {
-        return MOperation;
+        return mOperation;
     }
 
     public Timestamp getDate() {
@@ -66,8 +66,8 @@ public class Admission implements Serializable{
         this.admissionId = admissionId;
     }
 
-    public void setMOperator(MOperator MOperator) {
-        this.MOperator = MOperator;
+    public void setmOperator(MOperator mOperator) {
+        this.mOperator = mOperator;
     }
 
     public void setPerson(Person person) {
@@ -75,7 +75,7 @@ public class Admission implements Serializable{
     }
 
     public void setMOperation(MOperation MOperation) {
-        this.MOperation = MOperation;
+        this.mOperation = MOperation;
     }
 
     public void setDate(Timestamp date) {

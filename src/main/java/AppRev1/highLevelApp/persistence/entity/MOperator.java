@@ -1,5 +1,8 @@
 package AppRev1.highLevelApp.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -27,6 +30,13 @@ public class MOperator {
             joinColumns=@JoinColumn(name="OPERATOR_ID", referencedColumnName="operatorId"),
             inverseJoinColumns=@JoinColumn(name="OPERATION_ID", referencedColumnName="operationId"))
     private List<MOperation> operationsList = new ArrayList<>();
+
+    @Getter
+    @Setter
+    @JsonIgnore
+    @OneToMany(targetEntity = Admission.class,
+            cascade = CascadeType.MERGE, mappedBy="mOperator")
+    private List<Admission> admissions;
 
     public MOperator(Person person) {
         this.person = person;

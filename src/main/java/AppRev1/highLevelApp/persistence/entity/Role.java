@@ -1,5 +1,9 @@
 package AppRev1.highLevelApp.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +21,13 @@ public class Role implements Serializable {
 
     @Column(name = "role")
     private String role;
+
+    @Getter
+    @Setter
+    @JsonIgnore
+    @ManyToMany(targetEntity = Person.class,
+            cascade = CascadeType.MERGE, mappedBy="rolesList")
+    private List<Person> personList;
 
     public Role() {
     }
