@@ -2,6 +2,8 @@ package AppRev1.highLevelApp.config.secutity;
 
 import AppRev1.highLevelApp.persistence.entity.Person;
 import AppRev1.highLevelApp.persistence.entity.Token;
+import AppRev1.highLevelApp.persistence.service.PersonService;
+import AppRev1.highLevelApp.persistence.service.TokenService;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.jasypt.util.text.StrongTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +25,23 @@ import java.sql.Date;
 public class TokenProvider{
 
     @Autowired
+    TokenService tokenService;
+
+    @Autowired
+    PersonService personService;
+
+    @Autowired
     StrongTextEncryptor encryptor;
 
     @Autowired
     PasswordEncoder encoder;
 
-    public Token generateToken(Person person){
+    public Token generateToken(Long personId){
+        Person person = personService.getPerson(personId);
         Date expires = new Date(System.currentTimeMillis()+1209600000l); // 2 weeks
         String tokenString = encryptor.encrypt(person.getLogin()+":"+encoder.encode(person.getPassword()));
         Token token = new Token(tokenString, expires, person );
+        tokenService.addToken(token);
         return token;
     }
 }
