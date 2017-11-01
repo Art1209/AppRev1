@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,20 +58,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.userDetailsService).passwordEncoder(this.getPasswordEncoder());
+        auth.authenticationProvider(new AuthenticationProvider() {
+            @Override
+            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+                return null;
+            }
+
+            @Override
+            public boolean supports(Class<?> authentication) {
+                return false;
+            }
+        })
+                .userDetailsService(this.userDetailsService).passwordEncoder(this.getPasswordEncoder());
     }
 
     @Override
-    protected void configure(final HttpSecurity http) throws Exception
-    {
+    protected void configure(final HttpSecurity http) throws Exception {
+        //Creating token when basic authentication is successful and the same token can be used to authenticate for further requests
+        final CustomBasicAuthenticationFilter customBasicAuthFilter =
+                new CustomBasicAuthenticationFilter(this.authenticationManager());
+        http.addFilter(customBasicAuthFilter);
 
         //Implementing Token based authentication in this filter
         final TokenAuthenticationFilter tokenFilter = new TokenAuthenticationFilter();
-        http.addFilterBefore(tokenFilter, BasicAuthenticationFilter.class);
-
-        //Creating token when basic authentication is successful and the same token can be used to authenticate for further requests
-        final CustomBasicAuthenticationFilter customBasicAuthFilter = new CustomBasicAuthenticationFilter(this.authenticationManager());
-        http.addFilter(customBasicAuthFilter);
+        http.addFilterBefore(tokenFilter, CustomBasicAuthenticationFilter.class);
 
         http.csrf()
                 .disable()
@@ -81,12 +94,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .permitAll()
                 .loginPage("/login")
-                .loginProcessingUrl("/j_spring_security_check")
-                .failureUrl("/login?error")
-                .successForwardUrl("/rest/test")
+//                .loginProcessingUrl("/j_spring_security_check")
+//                .failureUrl("/login?error")
+//                .successForwardUrl("/rest/test")
 //                .defaultSuccessUrl("/main/Hello")
-                .usernameParameter("j_username")
-                .passwordParameter("j_password");
+//                .usernameParameter("j_username")
+//                .passwordParameter("j_password")
+                ;
 
         http.logout()
                 .permitAll()

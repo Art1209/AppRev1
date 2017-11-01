@@ -1,13 +1,11 @@
 package AppRev1.highLevelApp.config.secutity;
 
-import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.jasypt.util.text.StrongTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -34,7 +32,7 @@ public class TokenAuthenticationFilter extends GenericFilterBean
             throws IOException, ServletException
     {
         final HttpServletRequest httpRequest = (HttpServletRequest)request;
-        final String accessToken = httpRequest.getHeader("header-name");
+        final String accessToken = httpRequest.getHeader(HttpHeaders.AUTHORIZATION);
         String login;
         if (null != accessToken && null!=(login = parseTokenForLogin(accessToken))) {
 

@@ -4,6 +4,7 @@ import AppRev1.highLevelApp.persistence.entity.Person;
 import AppRev1.highLevelApp.persistence.entity.Token;
 import AppRev1.highLevelApp.persistence.service.PersonService;
 import AppRev1.highLevelApp.persistence.service.TokenService;
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * Created by aalbutov on 27.10.2017.
  */
+@Log4j
 @Component
 public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter implements AuthenticationSuccessHandler {
 
@@ -41,6 +43,7 @@ public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter i
     @Override
     protected void onSuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response, Authentication authResult) {
+        log.info("onSuccessfulAuthentication in CustomBasicAuthenticationFilter");
         Person person = personService.getPerson(((CustomPrincipal)authResult.getPrincipal()).getId());
         Token token = null;
         List<Token> tokens;
@@ -55,7 +58,7 @@ public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter i
         }
         if (null==token)token = tokenProvider.generateToken(person.getId());
         //send token in the response
-        response.setHeader(HttpHeaders.AUTHORIZATION , token.getToken());
+        response.setHeader(HttpHeaders.SET_COOKIE , HttpHeaders.AUTHORIZATION+"="+token.getToken());
     }
 
     @Override
